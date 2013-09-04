@@ -8,8 +8,8 @@ Digikey
 
 
 1 - DC Brushed Motor - P14355-ND - PPN7PA12C1
-2 - 50K Pot - P3P5503-ND - EVU-E2AF25B54
-2 - Switch Push Button - P12347S-ND - ESE-20C443
+1 - 50K Pot - P3P5503-ND - EVU-E2AF25B54
+1 - Switch Push Button - P12347S-ND - ESE-20C443
 1 - Mini Breadboard - 700-00095-ND - 700-00095
 
 Mouser
@@ -17,7 +17,7 @@ Mouser
 
 1 - Arduino UNO - 782-A000066 - A000066
 1 - DC Bridge Driver - 757-TA7291SGOJ - TA7291SG(O,J)
-1 - White Round LED - 941-C503DWANCCBEB151 - C503D-WAN-CCBEB151
+2 - White Round LED - 941-C503DWANCCBEB151 - C503D-WAN-CCBEB151
 1 - Ambient Light Sensor - 782-TEPT4400 - TEPT4400
 1 - Parallax Servo - 900-00008-ND - 900-00008
 5 - 10k Resistor - A105999CT-ND - 1625875-6
