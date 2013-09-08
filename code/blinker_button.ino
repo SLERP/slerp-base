@@ -10,6 +10,7 @@ bool ledOn = true;
 bool blinking = false;
 int lastButton = 1;
 int counter = 0;
+int pwmPulseWidth;
 
 long lastTime = 0;
 long debounce = 50;
@@ -46,17 +47,26 @@ void loop() {
   } 
   lastButton = buttonState;
   
+  // Hardcode PWM
+  // Every 20 ms, choose percentage of "on"
+  
+  pwmPulseWidth = (sensorValue/1000) * 20;
+  if (pwmPulseWidth > 20) {
+   pwmPulseWidth = 20;
+  }
+  
+  
   if(blinking)  {
-    if (counter > sensorValue/2)  {
+    if (counter < pwmPulseWidth) {
+      digitalWrite(led,HIGH);
+      ledOn = true;
+    }
+  
+    if (counter > 20)  {
       counter = 0;
-      if(ledOn)  {
-        digitalWrite(led,LOW);
-        ledOn = false;
-      }
-      else  {
-        digitalWrite(led,HIGH);
-        ledOn = true;
-      }
+      digitalWrite(led,LOW);
+      ledOn = false;
+      
     }
     counter = counter + 1;
   }
