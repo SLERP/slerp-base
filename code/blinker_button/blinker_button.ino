@@ -14,7 +14,6 @@ int led = 11;
 int button = 2;
 
 // Some state variables
-bool ledOn = true;
 bool blinking = false;
 int lastButton = 1;
 int pwmPulseWidth;
@@ -24,7 +23,7 @@ long debounce = 50;
 // the setup routine runs once when you press reset:
 void setup() {                
   // initialize the digital pin as an output.
-  pinMode(led, OUTPUT);
+  pinMode(led, OUTPUT);             // set LED pin to power LED
   pinMode(button, INPUT);           // set pin to input
   digitalWrite(button, HIGH);       // turn on pullup resistors  
   Serial.begin(9600);               // Serial output for debug
