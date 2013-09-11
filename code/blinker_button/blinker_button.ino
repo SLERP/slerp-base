@@ -17,7 +17,6 @@ int button = 2;
 bool ledOn = true;
 bool blinking = false;
 int lastButton = 1;
-int counter = 0;
 int pwmPulseWidth;
 long lastTime = 0;
 long debounce = 50;
@@ -49,7 +48,6 @@ void loop() {
     // If LED is off, turn it on
     else  {
       blinking = true;
-      counter = 0;
       digitalWrite(led,HIGH);
     }
     lastTime = millis(); 
