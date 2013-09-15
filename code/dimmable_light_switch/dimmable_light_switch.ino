@@ -2,7 +2,7 @@
 * Based off of the arduino example code.
 *
 * This was written for use with the tutorial at:
-* https://github.com/SLERP/slerp-base/wiki/Blinker-Button
+* https://github.com/SLERP/slerp-base/wiki/Dimmable-Light-Switch 
 *
 * It will take a voltage level and send out a proportional
 * PWM signal. Toggle the PWM with a digital input.
