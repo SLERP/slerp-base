@@ -1,10 +1,10 @@
 /* 
-* Based off of the arduino example code.
 *
 * This was written for use with the tutorial at:
-* https://github.com/SLERP/slerp-base/wiki/Photodiode-Response
+* https://github.com/SLERP/slerp-base/wiki/Automatic-Light
 * 
-* It will take a in an analog voltage input and toggle a digital on and off.
+* It will take a in an analog voltage input and toggle a digital
+* PWM in negative feedback.
 *
 */
  
@@ -13,13 +13,12 @@ int led = 11;
 int button = 2;
 
 // Some state variables
-bool blinking = false;
+bool blinking = true;
 int lastButton = 1;
 long lastTime = 0;
 long debounce = 50;
-int stepLevel = 0;
-int count = 0;
-int averager[100];
+double pwmPulseWidth = 0;
+int error;
 
 // the setup routine runs once when you press reset:
 void setup() {                
@@ -32,16 +31,10 @@ void setup() {
 
 // the loop routine runs over and over again forever:
 void loop() {
-
+  int setPoint = 200;
+  double k = 0.006;
+  
   int photoValue = analogRead(A0);
-  photoValue = (float(photoValue)/100) * 255;
-  if (photoValue > 255) {
-   // 2^8 = 256
-   photoValue = 255;
-  }
-  if (photoValue < 0 )  {
-    photoValue = 0;
-  }
   // Check if the button has been pressed
   int buttonState = digitalRead(button);
  
@@ -50,8 +43,6 @@ void loop() {
     // If Led is on, turn it off
     if(blinking)  {
       blinking = false;
-      stepLevel = 0;
-      count=0;
       digitalWrite(led,LOW);
     }
     // If LED is off, turn it on
@@ -63,31 +54,40 @@ void loop() {
   } 
   lastButton = buttonState;
   
-  if (blinking)  {
+ // PWM
+  // Based on the voltage level input range, scale
+  // the values so that the potentiometer gives us a full
+  // 8 bits of PWM resolution.
+  photoValue = (float(photoValue)/100) * 255;
+  if (photoValue > 255) {
+   // 2^8 = 256
+   photoValue = 255;
+  }
+  if (photoValue < 0 )  {
+    photoValue = 0;
+  }
   
-    if (count > 99)  {
-      // Output the voltage across the photodiode resistor in mV.
-      int averageInput = 0;
-      for (int i = 0; i < 99; i++)  {
-        averageInput+=averager[i];
-      }
-      averageInput = averageInput/100;
-      Serial.println(averageInput);
-      
-      stepLevel = stepLevel + 25;
-      if (stepLevel > 249)  {
-        stepLevel = 0;
-      }
-      analogWrite(led,stepLevel);
-      
-      count = 0;
-    }
-    averager[count] = photoValue;
-    count=count+1;
+  error = photoValue - setPoint;
+  
+  
+  // For debug (use Arduino serial monitor in IDE).
+  pwmPulseWidth = pwmPulseWidth - double(error)*k;
+  Serial.println(pwmPulseWidth);
+  if (pwmPulseWidth > 255) {
+   // 2^8 = 256
+   pwmPulseWidth = 255;
+  }
+  if (pwmPulseWidth < 0 )  {
+    pwmPulseWidth = 0;
   }
   
   
   
+  // Write the PWM value to the digital pin
+  // analogWrite produces PWM output with 8bit resolution
+  if(blinking)  {
+      analogWrite(led,int(pwmPulseWidth));
+  }
   
   
   // Repeat loop 1kHz
