@@ -34,7 +34,7 @@ void setup() {
 
 // the loop routine runs over and over again forever:
 void loop() {
-  int setPoint = 30;
+  int setPoint = 20;
   double k = 0.01;
   
   int photoValue = analogRead(A0);
@@ -61,11 +61,10 @@ void loop() {
   // Based on the voltage level input range, scale
   // the values so that the potentiometer gives us a full
   // 8 bits of PWM resolution.
-
-  photoValue = (float(photoValue)/20) * 255;
+  photoValue = int((float(photoValue)/10.0) * 255.0);
   if (photoValue > 255) {
-   // 2^8 = 256
-   photoValue = 255;
+    // 2^8 = 256
+    photoValue = 255;
   }
   if (photoValue < 0 )  {
     photoValue = 0;
@@ -86,7 +85,7 @@ void loop() {
   
   // For debug (use Arduino serial monitor in IDE).
   pwmPulseWidth = pwmPulseWidth - double(error)*k;
-  Serial.println(pwmPulseWidth);
+  Serial.println(averagedValue);
   if (pwmPulseWidth > 255) {
    // 2^8 = 256
    pwmPulseWidth = 255;
