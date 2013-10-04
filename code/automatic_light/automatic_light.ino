@@ -59,7 +59,7 @@ void loop() {
   
  // PWM
   // Based on the voltage level input range, scale
-  // the values so that the potentiometer gives us a full
+  // the values so that the photodiode gives us a full
   // 8 bits of PWM resolution.
   photoValue = int((float(photoValue)/10.0) * 255.0);
   if (photoValue > 255) {
