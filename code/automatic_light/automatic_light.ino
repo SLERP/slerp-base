@@ -95,7 +95,7 @@ void loop() {
   }
   
   
-  //blinking = true;
+  blinking = true;
   //Serial.println(pwmPulseWidth);
   // Write the PWM value to the digital pin
   // analogWrite produces PWM output with 8bit resolution
