@@ -10,7 +10,7 @@
  
 // We name our pins with something sensible
 int led = 11;
-int button = 2;
+int button = 1;
 
 // Some state variables
 bool blinking = true;
@@ -95,7 +95,8 @@ void loop() {
   }
   
   
-  
+  //blinking = true;
+  //Serial.println(pwmPulseWidth);
   // Write the PWM value to the digital pin
   // analogWrite produces PWM output with 8bit resolution
   if(blinking)  {
