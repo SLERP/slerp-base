@@ -10,7 +10,7 @@
  
 // We name our pins with something sensible
 int led = 11;
-int button = 1;
+int button = 2;
 
 // Some state variables
 bool blinking = true;
@@ -46,12 +46,10 @@ void loop() {
     // If Led is on, turn it off
     if(blinking)  {
       blinking = false;
-      digitalWrite(led,LOW);
     }
     // If LED is off, turn it on
     else  {
       blinking = true;
-      digitalWrite(led,HIGH);
     }
     lastTime = millis(); 
   } 
@@ -85,7 +83,7 @@ void loop() {
   
   // For debug (use Arduino serial monitor in IDE).
   pwmPulseWidth = pwmPulseWidth - double(error)*k;
-  Serial.println(averagedValue);
+  //Serial.println(averagedValue);
   if (pwmPulseWidth > 255) {
    // 2^8 = 256
    pwmPulseWidth = 255;
@@ -94,13 +92,13 @@ void loop() {
     pwmPulseWidth = 0;
   }
   
-  
-  blinking = true;
-  //Serial.println(pwmPulseWidth);
+  Serial.println(pwmPulseWidth);
   // Write the PWM value to the digital pin
   // analogWrite produces PWM output with 8bit resolution
   if(blinking)  {
       analogWrite(led,int(pwmPulseWidth));
+  } else {
+      analogWrite(led,0);
   }
   
   
