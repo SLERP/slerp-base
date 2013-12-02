@@ -1,3 +1,21 @@
+/*
+*
+*  This was written for use with the tutorial at:
+*  https://github.com/SLERP/slerp-base/wiki/Creating-a-Drink-Mixer!
+*  
+*  This is the culminating code that brings everything together. You'll notice much of the code
+*  from previous tutorials is reused. The thing to notice is more of a use of functions, which
+*  help simplify the logic in the main loop.
+*
+*  The user selects their sugar amount by moving the potentiometer to the desired setting. Once the
+*  button is pressed, sugar is dumped into the cup and stirred in "one unit" increments until the 
+*  desired transmittance (solution concentration) is reached. It is up to the design teams to decide
+*  what "one unit" is. See my implementation below.
+*
+*  Once int.0 (an interrupt on PIN2) recognizes a falling edge (transition from HIGH to LOW),
+*  boolean intrcv is set HIGH. This flag will cause the mixer to start its automated mixing process.
+*
+*/
 #include <Servo.h>
 
 Servo myservo;
@@ -61,7 +79,7 @@ void loop()
         
         // get mix ratio setting (0-255 from pot)
         potMix = getPotValue();   
-        photoMix = getPhotoValue();
+        photoMix = getMixValue(mixThreshold);
         
         // add "mix units" until desired mix is achieved
         // while loop is dangerous! -- how can we avoid an infinite loop?
@@ -97,6 +115,7 @@ void dropMix()
     myservo.writeMicroseconds(STOP); 
 }
 
+// get photodiode value and scale to 0-255
 int getPhotoValue()
 {
     int photoValue = (float(analogRead(A0))/100) * 255;
@@ -107,11 +126,12 @@ int getPhotoValue()
     if (photoValue < 0 )  {
         photoValue = 0;
     }
-    Serial.println(photoValue);                  //Output brightness for debug
+    //Serial.println(photoValue);                  //Output brightness for debug
     
     return photoValue;
 }
 
+// get potentiometer value and scale to 0-255
 int getPotValue()
 {   
     // from empirical testing
@@ -124,11 +144,12 @@ int getPotValue()
     if (potValue < 0 )  {
         potValue = 0;
     }
-    Serial.println(potValue);                  //Output brightness for debug
+    //Serial.println(potValue);                  //Output brightness for debug
     
     return potValue;
 }
 
+// spin the blade two directions for maximum mixing (TM)!
 void spinBlade()
 {
     digitalWrite(IN1, HIGH);                  //Set IN1 HIGH, motor rotate
@@ -142,6 +163,8 @@ void spinBlade()
     delay(timedelay);                         //settling time
 }
 
+// get the measured (scaled) photodiode response to an LED flash
+// scale by a maximum value
 int getMixValue(int photoThresh)
 {
      // get sensor readings
@@ -149,6 +172,9 @@ int getMixValue(int photoThresh)
      delay(10); //just in case we're running on a *really* fast processor
      int photoValue = getPhotoValue();
      digitalWrite(led, LOW);
+
+     int mixVal = (float(photoValue)/float(photoThresh))*255;
+     Serial.println(mixVal);    // Output for debug
      
-     return (float(photoValue)/float(photoThresh))*255;
+     return mixVal;
 }
