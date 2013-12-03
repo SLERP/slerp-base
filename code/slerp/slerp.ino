@@ -31,14 +31,14 @@ int potMix = 0;
 // potentiometer is connected to A1
 
 // Some state variables
-bool intrcv = HIGH;                       //flag for interrupt
+bool intrcv = LOW;                        //flag for interrupt
 int velocity = 1500;                      //slow, CW movement
 int onerot = 9000;                        //time for full rotation
 int STOP = 1510;                          //stops servo
 int lighthreshold = 180;                  //based on ambient lighting conditions
 int timerotate = 5000;                        //5 second delay
 int timedelay = 1000;                         //1 second delay
-int mixThreshold = 180;                  // The light setting for the "maximum sugar" mix (pot == 255)
+int mixThreshold = 180;                  // The light setting for "no sugar" mix (pot == 0)
 
 // the setup routine runs once when you press reset 
 void setup() 
@@ -83,6 +83,7 @@ void loop()
         
         // add "mix units" until desired mix is achieved
         // while loop is dangerous! -- how can we avoid an infinite loop?
+        // may need to change the direction of the inequality!
         while(photoMix < potMix)
         {
             dropMix();
@@ -172,8 +173,16 @@ int getMixValue(int photoThresh)
      delay(10); //just in case we're running on a *really* fast processor
      int photoValue = getPhotoValue();
      digitalWrite(led, LOW);
-
-     int mixVal = (float(photoValue)/float(photoThresh))*255;
+     
+     if (photoValue > photoThresh)
+     {
+       return 0;
+     }
+     
+     // find mix completion from 0-255 (where 255 is all sugar, and 0 is no mix)
+     // here we know photoValue < photoThresh and want small photoValues to report
+     // a better mix.
+     int mixVal = (float(photoThresh - photoValue)/float(photoThresh))*255;
      Serial.println(mixVal);    // Output for debug
      
      return mixVal;
